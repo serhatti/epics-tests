@@ -1,0 +1,46 @@
+record(sub, counter) {
+     field(DESC, "Counter Value")     
+     field(SNAM, incrementByOne)
+     field(SCAN, ".2 second")
+}
+#Asagida iki tane random sinyal ureten aygit olsun. Bunlar 0.2 saniyede bir cpp dosyasinda verilen parametrelere
+#gore Gaussian ve Uniform sinyal degerleri uretsin
+record(sub, sig_ch01) {
+     field(DESC, "Analog Gaussian Signal")
+     field(PHAS,0)
+     field(SNAM, makeGaussian)
+     field(SCAN, ".2 second")
+     field(HIHI,120)
+     field(HIGH,130)
+     field(LOW,80)
+     field(LOLO,70) 
+     field(FLNK,trigger)   
+}
+record(sub, sig_ch02) {
+     field(DESC, "Analog Uniform Signal")
+     field(PHAS,0)
+     field(SNAM, makeUniform)
+     field(SCAN, ".2 second")
+     field(HIHI,9)
+     field(HIGH,8)
+     field(LOW,3)
+     field(LOLO,2)
+     field(FLNK,trigger)   
+}
+#ustteki iki aygiti bi tetikleyiciye baglayalim. Gelen sinyaller uzerinde bir hesaplama yaptiktan sonra
+#cikan sonuc belirli kriterleri sagliyorsa 1 saglamiyorsa 0 verelim
+record(calcout,trigger){
+     #sacma sapan asenkronizayon seylerini onlemek icin PHAS leri siralamak iyi olur diye dusundum
+     #yani gaussian ve uniform islendikten sonra trigger islenecek. Mantik olarak boyle olmasi lazim...
+     field(PHAS,1)
+	field(INPA, sig_ch01)
+     field(INPB, sig_ch02)
+     #Scan i Passive yerine event based bir seyler de yapabiliriz falan fesmekan
+     field(SCAN,"Passive")
+     field(CALC, "LOG(ABS(A))*B<5")
+     #bu asagidakileri set etmezsem sadece PV degistiginde monitor sinyali yollaniyor
+     #surekli takip etmek icin bunlar gerekli.
+     field(ADEL,-1)
+     field(MDEL,-1)
+}
+#ustteki trigger degerlerine gore envai cesit sey yapilabilir!.

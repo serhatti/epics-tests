@@ -1,0 +1,9 @@
+*.settings
+*.so
+*.o
+*.d
+*.exe
+*.dylib
+*.vscode
+*.swp
+
